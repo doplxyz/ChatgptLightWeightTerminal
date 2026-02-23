@@ -1,12 +1,13 @@
-# Akutsu Proxy Terminal (APT) 設計書・技術要件仕様書
+# ChatGPT LightWeight Terminal (CLWT) 設計書・技術要件仕様書
 
 ## 1. はじめに
 
-本ドキュメントは、Akutsu Proxy Terminal (APT) のシステム設計および技術要件をまとめたものである。APTは、ChatGPTとのチャット履歴をローカル環境で効率的に管理し、UI上での操作性を向上させることを目的としたデスクトップアプリケーションである。特に、コードブロックの改行やインデントの保持、チャット履歴の同期機能、および使いやすいユーザインターフェースの提供に重点を置いている。
+本ドキュメントは、ChatGPT LightWeight Terminal (CLWT) （旧称: Akutsu Proxy Terminal）のシステム設計および技術要件をまとめたものである。CLWTは、ChatGPTとのチャット履歴をローカル環境で効率的に管理し、UI上での操作性を向上させることを目的としたデスクトップアプリケーションである。特に、コードブロックの改行やインデントの保持、チャット履歴の同期機能、および使いやすいユーザインターフェースの提供に重点を置いている。
+本アプリケーションは、WindowsおよびLinux (Wayland/X11) の両OS環境で動作するクロスプラットフォーム設計となっている。
 
 ## 2. システム概要
 
-APTは、PythonベースのGUIアプリケーションであり、バックエンドにPlaywrightを使用してWebブラウザ（ChatGPT）を自動操作する。ユーザは専用のGUIを通じてChatGPTと対話し、履歴の閲覧や管理を行うことができる。
+CLWTは、PythonベースのGUIアプリケーションであり、バックエンドにPlaywrightを使用してWebブラウザ（ChatGPT）を自動操作する。ユーザは専用のGUIを通じてChatGPTと対話し、履歴の閲覧や管理を行うことができる。
 
 ## 3. システムアーキテクチャ
 
@@ -32,9 +33,10 @@ APTは、PythonベースのGUIアプリケーションであり、バックエ�
 
 ## 4. ディレクトリ構造
 
-システムの動作に必要なディレクトリ構成は以下の通りである。
+システムのディレクトリ構成は、実行ファイル `ChatgptLightWeightTerminal.py` が配置されたディレクトリをルートとして動的に解決される。
 
-- `workdir/006_pythonweb/` (ルートディレクトリ)
+- `(AppRoot)/` (アプリケーションルート)
+  - `ChatgptLightWeightTerminal.py`: アプリケーション本体。
   - `applog/session/`: Playwrightのブラウザセッション情報（Cookie、LocalStorage等）を保存するディレクトリ。再起動後もログイン状態を維持するために使用。
   - `tmp1/`: チャット履歴の解析済みJSONデータをキャッシュとして保存するディレクトリ。
   - `log1/`: システムの動作ログファイルを保存するディレクトリ。7日経過した古いログは自動的に削除される。
@@ -123,13 +125,28 @@ APTは、PythonベースのGUIアプリケーションであり、バックエ�
 - **GUIライブラリ**: PyQt6
 - **ブラウザ操作**: Playwright (Sync API)
 - **ブラウザ**: Chromium (Headless False, `--no-sandbox`, `--disable-blink-features=AutomationControlled`)
-- **環境**: Linux (Wayland/XCB対応)
+- **環境**: Linux (Wayland/XCB対応) および Windows 10/11
 
-## 9. 運用手順 (Task 007o)
+## 9. 運用手順
 
-1. `setup_apt_env.bash` を実行し、環境構築を行う（初回のみ）。
-2. `TASK-007o.bash` を実行する。
-   - 仮想環境が有効化される。
-   - `SUMMARY3.md` が生成される。
-   - アプリケーションコード `task007o_apt_client.py` が生成される。
-   - アプリケーションが起動する。
+### 9.1 初回セットアップ
+OSに応じたセットアップスクリプトを実行し、環境構築を行う。
+
+- **Linux**: `bash setup_clwt_env.bash` を実行。
+- **Windows**: `setup_clwt_env.bat` を実行。
+  - これにより `venv` の作成、ライブラリのインストール、Chromiumのセットアップが自動で行われる。
+
+### 9.2 アプリケーションの起動
+仮想環境を有効化した状態で、Pythonスクリプトを実行する。
+
+```bash
+# Linux
+source venv/bin/activate
+python ChatgptLightWeightTerminal.py
+```
+
+```bat
+rem Windows
+call venv\Scripts\activate
+python ChatgptLightWeightTerminal.py
+```
