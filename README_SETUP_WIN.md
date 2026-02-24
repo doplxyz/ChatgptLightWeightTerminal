@@ -1,55 +1,91 @@
 # ChatGPT LightWeight Terminal (CLWT) Windowsセットアップガイド
 
-このガイドでは、Windows環境でChatGPT LightWeight Terminal (CLWT)をセットアップする手順を説明します。
+このガイドでは、Windows環境でChatGPT LightWeight Terminal (CLWT)をセットアップし、実行するための手順を詳細に説明します。
 
-## 1. 前提条件: Pythonのインストール
+## 1. 前提条件: Pythonのインストール（重要）
 
-CLWTを実行するには、Python 3.xが必要です。以下の手順でインストールしてください。
+CLWTを実行するには、Python環境が必要です。まだインストールしていない場合は、以下の手順に従ってインストールしてください。
 
-1.  Python公式サイト (https://www.python.org/downloads/) から最新のPythonインストーラーをダウンロードします。
-2.  インストーラーを実行します。
-3.  **重要:** インストール画面の下部にある **"Add Python to PATH" (Pythonを環境変数PATHに追加する)** のチェックボックスを必ずオンにしてください。
-    - これを行わないと、`setup_clwt_env.bat` が正常に動作しません。
-4.  "Install Now" をクリックしてインストールを完了します。
+1.  **Python公式サイトへアクセス**
+    - [https://www.python.org/downloads/](https://www.python.org/downloads/) にアクセスし、最新のPythonインストーラー（Python 3.8以上推奨）をダウンロードしてください。
+
+2.  **インストーラーの実行と設定**
+    - ダウンロードしたインストーラーを実行します。
+    - **【最重要】** インストール画面の下部にある **"Add Python to PATH" (Pythonを環境変数PATHに追加する)** のチェックボックスを**必ずオンにしてください**。
+    - これを行わないと、セットアップスクリプトやアプリケーションがPythonを見つけられず、エラーになります。
+
+3.  **インストールの完了**
+    - "Install Now" をクリックしてインストールを完了させます。
 
 ## 2. セットアップスクリプトの実行
 
-1.  エクスプローラーでCLWTのフォルダを開きます。
-2.  `setup_clwt_env.bat` をダブルクリックして実行します。
-3.  コマンドプロンプトが開き、自動的に以下の処理が行われます。
-    - 必要なフォルダの作成 (`applog`, `tmp1`, `log1`)
-    - Python仮想環境 (`venv`) の作成
-    - 必要なライブラリ (`PyQt6`, `playwright`) のインストール
-    - Playwright用ブラウザ (Chromium) のインストール
-4.  "System: Setup complete." と表示されたらセットアップは完了です。何かキーを押してウィンドウを閉じてください。
+Pythonのインストールが完了したら、付属のセットアップスクリプトを使用して環境を構築します。
+
+1.  **フォルダを開く**
+    - エクスプローラーで `setup_clwt_env.bat` があるフォルダを開きます。
+
+2.  **スクリプトの実行**
+    - `setup_clwt_env.bat` をダブルクリックして実行します。
+    - コマンドプロンプトが開き、自動的に以下の処理が行われます。
+        - 必要なフォルダの作成 (`applog`, `tmp1`, `log1`)
+        - Python仮想環境 (`venv`) の作成
+        - 必要なライブラリ (`PyQt6`, `playwright`) のインストール
+        - Playwright用ブラウザ (Chromium) のインストール
+
+3.  **完了の確認**
+    - 画面に `Setup Complete!` と表示されたらセットアップは完了です。何かキーを押してウィンドウを閉じてください。
 
 ## 3. アプリケーションの起動
 
 セットアップ完了後、以下の手順でアプリケーションを起動します。
 
+### 方法A: コマンドプロンプトから起動
+
 1.  コマンドプロンプト（またはPowerShell）を開き、CLWTのディレクトリに移動します。
-2.  以下のコマンドを実行します。
+2.  以下のコマンドを順番に実行します。
 
-```batch
-call venv\Scripts\activate
-python ChatgptLightWeightTerminal.py
-```
+    ```cmd
+    call venv\Scripts\activate
+    python ChatgptLightWeightTerminal.py
+    ```
 
-または、以下の内容で `run_clwt.bat` というファイルを作成し、ダブルクリックで起動することも可能です。
+### 方法B: 起動用バッチファイルを作成して起動
 
-```batch
-@echo off
-cd /d "%~dp0"
-call venv\Scripts\activate
-start pythonw ChatgptLightWeightTerminal.py
-```
+毎回コマンドを入力するのが面倒な場合は、以下の内容で `run_clwt.bat` というファイルを作成し、ダブルクリックで起動できるようにします。
+
+1.  メモ帳などのテキストエディタを開きます。
+2.  以下の内容をコピー＆ペーストします。
+
+    ```bat
+    @echo off
+    cd /d "%~dp0"
+    call venv\Scripts\activate.bat
+    start pythonw ChatgptLightWeightTerminal.py
+    ```
+
+3.  ファイルを `run_clwt.bat` という名前で、`setup_clwt_env.bat` と同じフォルダに保存します。
+4.  今後は `run_clwt.bat` をダブルクリックするだけで起動できます。
 
 ## トラブルシューティング
 
-### "Pythonが見つかりません" (Error: Python is not installed...) エラーが出る場合
-Pythonがインストールされていないか、PATHに追加されていません。
-手順1の「**"Add Python to PATH" (Pythonを環境変数PATHに追加する)**」を確認して、Pythonを再インストールしてください。
-インストール後にPCの再起動が必要な場合があります。
+### Q1. "Python not found" というエラーが出る
+**原因:** Pythonがインストールされていないか、環境変数PATHに追加されていません。
+**対策:** 手順1の「Pythonのインストール」を見直し、**"Add Python to PATH"** にチェックを入れて再インストールしてください。インストール後はPCを再起動することをお勧めします。
 
-### セットアップが途中で止まる場合
-インターネット接続を確認してください。ライブラリやブラウザのダウンロードに時間がかかる場合があります。
+### Q2. バッチファイルを実行すると一瞬で閉じてしまう、またはエラーメッセージが出る
+**原因:** スクリプトの構文エラーや、古いバージョンのファイルが残っている可能性があります。
+**対策:** `setup_clwt_env.bat` を最新のものに更新してください。また、テキストエディタで開いて、文字化けや不正な文字が含まれていないか確認してください。
+
+### Q3. "ModuleNotFoundError" が出る
+**原因:** 仮想環境が有効になっていないか、ライブラリのインストールに失敗しています。
+**対策:** `setup_clwt_env.bat` を再実行してエラーが出ていないか確認してください。インターネット接続が安定していることも確認してください。
+
+### Q4. 'Setup' は、内部コマンドまたは外部コマンド...として認識されていません
+**原因:** バッチファイルの中身が壊れています（コメント記号の欠落など）。
+**対策:** 正しい `setup_clwt_env.bat` を使用してください。ファイルの中身が以下のようになっているか確認してください（先頭部分）。
+
+    ```bat
+    @echo off
+    setlocal
+    :: ...
+    ```

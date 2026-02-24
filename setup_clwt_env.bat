@@ -1,29 +1,33 @@
 @echo off
 setlocal
 
-rem ChatGPT LightWeight Terminal (CLWT) - Windows Setup Script
+:: ChatGPT LightWeight Terminal (CLWT) - Windows Setup Script
+:: This script sets up the Python environment and installs dependencies.
 
+:: Get the directory where this script is located
 set "WORKDIR=%~dp0"
 cd /d "%WORKDIR%"
 
-echo System: Starting CLWT initial setup for Windows.
+echo ========================================================
+echo  ChatGPT LightWeight Terminal (CLWT) Setup
+echo ========================================================
 
-rem --------------------------------------------------------
-rem Check for Python installation
-rem --------------------------------------------------------
+:: --------------------------------------------------------
+:: Check for Python installation
+:: --------------------------------------------------------
 set "PYTHON_CMD="
 
-rem Try 'python'
+:: Check for 'python'
 python --version >nul 2>&1
 if not errorlevel 1 set "PYTHON_CMD=python"
 
-rem If not found, try 'py' (Python Launcher)
+:: If not found, check for 'py' (Python Launcher)
 if not defined PYTHON_CMD (
     py --version >nul 2>&1
     if not errorlevel 1 set "PYTHON_CMD=py"
 )
 
-rem If not found, try 'python3'
+:: If not found, check for 'python3'
 if not defined PYTHON_CMD (
     python3 --version >nul 2>&1
     if not errorlevel 1 set "PYTHON_CMD=python3"
@@ -31,74 +35,86 @@ if not defined PYTHON_CMD (
 
 if not defined PYTHON_CMD (
     echo.
-    echo ========================================================
-    echo Error: Pythonが見つかりません。
-    echo Error: Python is not installed or not found in PATH.
-    echo.
-    echo Pythonをインストールし、PATHに追加してください。
-    echo 詳細は同梱の "README_SETUP_WIN.md" を参照してください。
-    echo ========================================================
+    echo [ERROR] Python not found.
+    echo Please install Python 3.8 or later and add it to your PATH.
+    echo See "README_SETUP_WIN.md" for details.
     echo.
     pause
     exit /b 1
 )
 
-echo System: Using Python executable: %PYTHON_CMD%
+echo [INFO] Using Python: %PYTHON_CMD%
+"%PYTHON_CMD%" --version
 
-rem 1. Create subfolders
+:: --------------------------------------------------------
+:: Create necessary directories
+:: --------------------------------------------------------
+echo [INFO] Creating directories...
 if not exist "applog\session" mkdir "applog\session"
 if not exist "tmp1" mkdir "tmp1"
 if not exist "log1" mkdir "log1"
 
-rem 2. Create Python virtual environment (venv)
+:: --------------------------------------------------------
+:: Create Virtual Environment
+:: --------------------------------------------------------
 if not exist "venv" (
-    echo System: Creating Python virtual environment [venv]...
+    echo [INFO] Creating virtual environment (venv)...
     "%PYTHON_CMD%" -m venv venv
     if errorlevel 1 (
-        echo Error: Failed to create virtual environment.
+        echo [ERROR] Failed to create virtual environment.
         pause
         exit /b 1
     )
 ) else (
-    echo System: venv already exists.
+    echo [INFO] Virtual environment (venv) already exists.
 )
 
-rem 3. Activate virtual environment
+:: --------------------------------------------------------
+:: Activate Virtual Environment and Install Dependencies
+:: --------------------------------------------------------
+echo [INFO] Activating virtual environment...
 call venv\Scripts\activate.bat
-if %errorlevel% neq 0 (
-    echo Error: Failed to activate virtual environment.
+if errorlevel 1 (
+    echo [ERROR] Failed to activate virtual environment.
     pause
     exit /b 1
 )
 
-rem 4. Install libraries
-echo System: Installing PyQt6 and Playwright...
+echo [INFO] Upgrading pip...
 python -m pip install --upgrade pip
-if %errorlevel% neq 0 (
-    echo Error: Failed to upgrade pip.
+if errorlevel 1 (
+    echo [ERROR] Failed to upgrade pip.
     pause
     exit /b 1
 )
+
+echo [INFO] Installing dependencies (PyQt6, playwright)...
 python -m pip install PyQt6 playwright
-if %errorlevel% neq 0 (
-    echo Error: Failed to install dependencies.
+if errorlevel 1 (
+    echo [ERROR] Failed to install dependencies.
     pause
     exit /b 1
 )
 
-rem 5. Install Playwright browser
-echo System: Installing Chromium for Playwright...
+echo [INFO] Installing Playwright browsers...
 python -m playwright install chromium
-if %errorlevel% neq 0 (
-    echo Error: Failed to install Playwright browsers.
+if errorlevel 1 (
+    echo [ERROR] Failed to install Playwright browsers.
     pause
     exit /b 1
 )
 
+:: --------------------------------------------------------
+:: Setup Complete
+:: --------------------------------------------------------
 echo.
 echo ========================================================
-echo System: Setup complete.
-echo System: Run "python ChatgptLightWeightTerminal.py" to start.
+echo  Setup Complete!
+echo  To run the application, execute:
+echo    venv\Scripts\activate
+echo    python ChatgptLightWeightTerminal.py
+echo.
+echo  Or use the run script if available.
 echo ========================================================
 echo.
 
