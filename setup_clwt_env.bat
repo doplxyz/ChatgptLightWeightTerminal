@@ -1,34 +1,33 @@
 @echo off
-chcp 65001 >nul
 setlocal
 
 :: ChatGPT LightWeight Terminal (CLWT) - Windows Setup Script
-:: このスクリプトはPython環境をセットアップし、依存関係をインストールします。
+:: \x82\xb1\x82̃X\x83N\x83\x8a\x83v\x83g\x82\xcdPython\x8a\xab\x82\xf0\x83Z\x83b\x83g\x83A\x83b\x83v\x82\xb5\x81A\x88ˑ\xb6\x8a֌W\x82\xf0\x83C\x83\x93\x83X\x83g\x81[\x83\x8b\x82\xb5\x82܂\xb7\x81B
 
-:: スクリプトのあるディレクトリを取得
+:: \x83X\x83N\x83\x8a\x83v\x83g\x82̂\xa0\x82\xe9\x83f\x83B\x83\x8c\x83N\x83g\x83\x8a\x82\xf0\x8e擾
 set "WORKDIR=%~dp0"
 cd /d "%WORKDIR%"
 
 echo ========================================================
-echo  ChatGPT LightWeight Terminal (CLWT) セットアップ
+echo  ChatGPT LightWeight Terminal (CLWT) \x83Z\x83b\x83g\x83A\x83b\x83v
 echo ========================================================
 
 :: --------------------------------------------------------
-:: Pythonのインストール確認
+:: Python\x82̃C\x83\x93\x83X\x83g\x81[\x83\x8b\x8am\x94F
 :: --------------------------------------------------------
 set "PYTHON_CMD="
 
-:: 'python' コマンドの確認
+:: 'python' \x83R\x83}\x83\x93\x83h\x82̊m\x94F
 python --version >nul 2>&1
 if not errorlevel 1 set "PYTHON_CMD=python"
 
-:: 見つからない場合、'py' (Python Launcher) の確認
+:: \x8c\xa9\x82\xa9\x82\xe7\x82Ȃ\xa2\x8fꍇ\x81A'py' (Python Launcher) \x82̊m\x94F
 if not defined PYTHON_CMD (
     py --version >nul 2>&1
     if not errorlevel 1 set "PYTHON_CMD=py"
 )
 
-:: 見つからない場合、'python3' の確認
+:: \x8c\xa9\x82\xa9\x82\xe7\x82Ȃ\xa2\x8fꍇ\x81A'python3' \x82̊m\x94F
 if not defined PYTHON_CMD (
     python3 --version >nul 2>&1
     if not errorlevel 1 set "PYTHON_CMD=python3"
@@ -36,86 +35,86 @@ if not defined PYTHON_CMD (
 
 if not defined PYTHON_CMD (
     echo.
-    echo [エラー] Pythonが見つかりません。
-    echo Python 3.8以降をインストールし、PATHに追加してください。
-    echo 詳細は "README_SETUP_WIN.md" を参照してください。
+    echo [\x83G\x83\x89\x81[] Python\x82\xaa\x8c\xa9\x82\xa9\x82\xe8\x82܂\xb9\x82\xf1\x81B
+    echo Python 3.8\x88ȍ~\x82\xf0\x83C\x83\x93\x83X\x83g\x81[\x83\x8b\x82\xb5\x81APATH\x82ɒǉ\xc1\x82\xb5\x82Ă\xad\x82\xbe\x82\xb3\x82\xa2\x81B
+    echo \x8fڍׂ\xcd "README_SETUP_WIN.md" \x82\xf0\x8eQ\x8fƂ\xb5\x82Ă\xad\x82\xbe\x82\xb3\x82\xa2\x81B
     echo.
     pause
     exit /b 1
 )
 
-echo [情報] 使用するPython: %PYTHON_CMD%
+echo [\x8f\xee\x95\xf1] \x8eg\x97p\x82\xb7\x82\xe9Python: %PYTHON_CMD%
 "%PYTHON_CMD%" --version
 
 :: --------------------------------------------------------
-:: ディレクトリの作成
+:: \x83f\x83B\x83\x8c\x83N\x83g\x83\x8a\x82̍쐬
 :: --------------------------------------------------------
-echo [情報] 必要なディレクトリを作成しています...
+echo [\x8f\xee\x95\xf1] \x95K\x97v\x82ȃf\x83B\x83\x8c\x83N\x83g\x83\x8a\x82\xf0\x8d쐬\x82\xb5\x82Ă\xa2\x82܂\xb7...
 if not exist "applog\session" mkdir "applog\session"
 if not exist "tmp1" mkdir "tmp1"
 if not exist "log1" mkdir "log1"
 
 :: --------------------------------------------------------
-:: 仮想環境の作成
+:: \x89\xbc\x91z\x8a\xab\x82̍쐬
 :: --------------------------------------------------------
 if not exist "venv" (
-    echo [情報] 仮想環境 ^(venv^) を作成しています...
+    echo [\x8f\xee\x95\xf1] \x89\xbc\x91z\x8a\xab ^(venv^) \x82\xf0\x8d쐬\x82\xb5\x82Ă\xa2\x82܂\xb7...
     "%PYTHON_CMD%" -m venv venv
     if errorlevel 1 (
-        echo [エラー] 仮想環境の作成に失敗しました。
+        echo [\x83G\x83\x89\x81[] \x89\xbc\x91z\x8a\xab\x82̍쐬\x82Ɏ\xb8\x94s\x82\xb5\x82܂\xb5\x82\xbd\x81B
         pause
         exit /b 1
     )
 ) else (
-    echo [情報] 仮想環境 ^(venv^) は既に存在します。
+    echo [\x8f\xee\x95\xf1] \x89\xbc\x91z\x8a\xab ^(venv^) \x82͊\xf9\x82ɑ\xb6\x8d݂\xb5\x82܂\xb7\x81B
 )
 
 :: --------------------------------------------------------
-:: 仮想環境の有効化と依存関係のインストール
+:: \x89\xbc\x91z\x8a\xab\x82̗L\x8c\xf8\x89\xbb\x82ƈˑ\xb6\x8a֌W\x82̃C\x83\x93\x83X\x83g\x81[\x83\x8b
 :: --------------------------------------------------------
-echo [情報] 仮想環境を有効化しています...
+echo [\x8f\xee\x95\xf1] \x89\xbc\x91z\x8a\xab\x82\xf0\x97L\x8c\xf8\x89\xbb\x82\xb5\x82Ă\xa2\x82܂\xb7...
 call venv\Scripts\activate.bat
 if errorlevel 1 (
-    echo [エラー] 仮想環境の有効化に失敗しました。
+    echo [\x83G\x83\x89\x81[] \x89\xbc\x91z\x8a\xab\x82̗L\x8c\xf8\x89\xbb\x82Ɏ\xb8\x94s\x82\xb5\x82܂\xb5\x82\xbd\x81B
     pause
     exit /b 1
 )
 
-echo [情報] pipをアップグレードしています...
+echo [\x8f\xee\x95\xf1] pip\x82\xf0\x83A\x83b\x83v\x83O\x83\x8c\x81[\x83h\x82\xb5\x82Ă\xa2\x82܂\xb7...
 python -m pip install --upgrade pip
 if errorlevel 1 (
-    echo [エラー] pipのアップグレードに失敗しました。
+    echo [\x83G\x83\x89\x81[] pip\x82̃A\x83b\x83v\x83O\x83\x8c\x81[\x83h\x82Ɏ\xb8\x94s\x82\xb5\x82܂\xb5\x82\xbd\x81B
     pause
     exit /b 1
 )
 
-echo [情報] 依存関係 ^(PyQt6, playwright^) をインストールしています...
+echo [\x8f\xee\x95\xf1] \x88ˑ\xb6\x8a֌W ^(PyQt6, playwright^) \x82\xf0\x83C\x83\x93\x83X\x83g\x81[\x83\x8b\x82\xb5\x82Ă\xa2\x82܂\xb7...
 python -m pip install PyQt6 playwright
 if errorlevel 1 (
-    echo [エラー] 依存関係のインストールに失敗しました。
+    echo [\x83G\x83\x89\x81[] \x88ˑ\xb6\x8a֌W\x82̃C\x83\x93\x83X\x83g\x81[\x83\x8b\x82Ɏ\xb8\x94s\x82\xb5\x82܂\xb5\x82\xbd\x81B
     pause
     exit /b 1
 )
 
-echo [情報] Playwright用ブラウザをインストールしています...
+echo [\x8f\xee\x95\xf1] Playwright\x97p\x83u\x83\x89\x83E\x83U\x82\xf0\x83C\x83\x93\x83X\x83g\x81[\x83\x8b\x82\xb5\x82Ă\xa2\x82܂\xb7...
 python -m playwright install chromium
 if errorlevel 1 (
-    echo [エラー] Playwright用ブラウザのインストールに失敗しました。
+    echo [\x83G\x83\x89\x81[] Playwright\x97p\x83u\x83\x89\x83E\x83U\x82̃C\x83\x93\x83X\x83g\x81[\x83\x8b\x82Ɏ\xb8\x94s\x82\xb5\x82܂\xb5\x82\xbd\x81B
     pause
     exit /b 1
 )
 
 :: --------------------------------------------------------
-:: セットアップ完了
+:: \x83Z\x83b\x83g\x83A\x83b\x83v\x8a\xae\x97\xb9
 :: --------------------------------------------------------
 echo.
 echo ========================================================
-echo  セットアップが完了しました！
-echo  アプリケーションを実行するには、以下を実行してください:
+echo  \x83Z\x83b\x83g\x83A\x83b\x83v\x82\xaa\x8a\xae\x97\xb9\x82\xb5\x82܂\xb5\x82\xbd\x81I
+echo  \x83A\x83v\x83\x8a\x83P\x81[\x83V\x83\x87\x83\x93\x82\xf0\x8e\xc0\x8ds\x82\xb7\x82\xe9\x82ɂ́A\x88ȉ\xba\x82\xf0\x8e\xc0\x8ds\x82\xb5\x82Ă\xad\x82\xbe\x82\xb3\x82\xa2:
 echo    venv\Scripts\activate
 echo    python ChatgptLightWeightTerminal.py
 echo.
-echo  または、実行用スクリプト ^(run_clwt.bat^) を作成して使用してください。
+echo  \x82܂\xbd\x82́A\x8e\xc0\x8ds\x97p\x83X\x83N\x83\x8a\x83v\x83g ^(run_clwt.bat^) \x82\xf0\x8eg\x97p\x82\xb5\x82Ă\xad\x82\xbe\x82\xb3\x82\xa2\x81B
 echo ========================================================
 echo.
 
